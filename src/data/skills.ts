@@ -69,7 +69,35 @@ export const skills: Skill[] = [
   { name: "SMS Integration", level: 72, color: "#38bdf8", category: "tool", showOnRadar: false },
 ];
 
-export const radarSkills = skills.filter((s) => s.showOnRadar !== false);
+/** Radar axis order — .NET & backend first, then frontend */
+const radarOrder = [
+  "ASP.NET Core",
+  ".NET",
+  "Entity Framework",
+  "C#",
+  "SQL Server",
+  "REST APIs",
+  "React",
+  "JavaScript",
+  "TypeScript",
+  "Next.js",
+  "Tailwind CSS",
+  "Python",
+];
+
+export const radarSkills = radarOrder
+  .map((name) => skills.find((s) => s.name === name))
+  .filter((s): s is Skill => s != null);
+
+/** Highlighted in the skills section (top row) */
+export const featuredSkills = [
+  "ASP.NET Core",
+  "Entity Framework",
+  ".NET",
+  "C#",
+  "SQL Server",
+  "React",
+] as const;
 
 export const skillCategories: SkillCategory[] = [
   "backend",

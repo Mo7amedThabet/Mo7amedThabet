@@ -29,6 +29,8 @@ export const translations = {
     skills: {
       title: "Skills & Tech Stack",
       subtitle: "Frontend, .NET backend, and databases — radar shows core strengths",
+      coreStack: "Core stack — .NET & React",
+      radarHint: "Proficiency radar (.NET & full-stack)",
       categories: {
         backend: "Backend & APIs",
         language: "Languages",
@@ -141,6 +143,8 @@ export const translations = {
     skills: {
       title: "المهارات والتقنيات",
       subtitle: "Frontend و .NET Backend وقواعد البيانات — الرادار يعرض أهم المهارات",
+      coreStack: "التقنيات الأساسية — .NET و React",
+      radarHint: "رادار المهارات (.NET و Full-Stack)",
       categories: {
         backend: "Backend و APIs",
         language: "لغات البرمجة",

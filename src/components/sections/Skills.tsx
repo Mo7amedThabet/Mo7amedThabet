@@ -3,10 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "@/context/AppContext";
-import { radarSkills, skillCategories, skills } from "@/data/skills";
+import {
+  featuredSkills,
+  radarSkills,
+  skillCategories,
+  skills,
+  type Skill,
+} from "@/data/skills";
 import { GlassCard } from "@/components/ui/GlassCard";
 
-/** Stable SVG coords — avoids server/client float drift on hydration */
 function roundCoord(n: number) {
   return Math.round(n * 100) / 100;
 }
@@ -23,14 +28,55 @@ function polarPoint(
   };
 }
 
+function SkillCard({
+  skill,
+  index,
+  highlight = false,
+}: {
+  skill: Skill;
+  index: number;
+  highlight?: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.03 }}
+      whileHover={{
+        y: -6,
+        boxShadow: `0 12px 32px ${skill.color}33`,
+      }}
+      className={`animate-float min-w-[7.5rem] cursor-default rounded-2xl px-4 py-3 text-center ${
+        highlight
+          ? "glass-panel ring-2 ring-violet-500/60"
+          : "glass-panel"
+      }`}
+      style={{
+        animationDelay: `${index * 0.12}s`,
+        borderColor: `${skill.color}44`,
+      }}
+    >
+      <div
+        className="mx-auto mb-1 h-2 w-12 rounded-full"
+        style={{
+          background: `linear-gradient(90deg, ${skill.color}, transparent)`,
+        }}
+      />
+      <span className="text-sm font-semibold">{skill.name}</span>
+      <p className="mt-0.5 text-xs text-[var(--text-muted)]">{skill.level}%</p>
+    </motion.div>
+  );
+}
+
 function SkillRadar() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  const size = 280;
+  const size = 300;
   const center = size / 2;
-  const radius = size / 2 - 40;
+  const radius = size / 2 - 48;
   const count = radarSkills.length;
   const angleStep = (2 * Math.PI) / count;
 
@@ -39,7 +85,7 @@ function SkillRadar() {
       const angle = i * angleStep - Math.PI / 2;
       const r = (skill.level / 100) * radius;
       const tip = polarPoint(center, center, r, angle);
-      const label = polarPoint(center, center, radius + 22, angle);
+      const label = polarPoint(center, center, radius + 26, angle);
       return { tip, label, skill };
     });
 
@@ -67,7 +113,7 @@ function SkillRadar() {
   if (!mounted) {
     return (
       <div
-        className="mx-auto flex h-[280px] w-[280px] items-center justify-center"
+        className="mx-auto flex h-[300px] w-[300px] items-center justify-center"
         aria-hidden
       >
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/40 border-t-violet-500" />
@@ -123,10 +169,14 @@ function SkillRadar() {
             y={label.y}
             textAnchor="middle"
             dominantBaseline="middle"
-            className="fill-[var(--text-muted)] text-[9px] font-medium"
+            className={`font-medium ${
+              skill.category === "backend"
+                ? "fill-violet-300 text-[8px]"
+                : "fill-[var(--text-muted)] text-[8px]"
+            }`}
           >
-            {skill.name.length > 12
-              ? skill.name.slice(0, 10) + "…"
+            {skill.name.length > 14
+              ? skill.name.slice(0, 12) + "…"
               : skill.name}
           </text>
         ))}
@@ -138,6 +188,12 @@ function SkillRadar() {
 export function Skills() {
   const { t } = useApp();
 
+  const highlighted = featuredSkills
+    .map((name) => skills.find((s) => s.name === name))
+    .filter((s): s is Skill => s != null);
+
+  let cardIndex = 0;
+
   return (
     <section id="skills" className="scroll-mt-24 px-4 py-20">
       <div className="mx-auto max-w-6xl">
@@ -145,58 +201,48 @@ export function Skills() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12 text-center"
+          className="mb-10 text-center"
         >
           <h2 className="text-3xl font-bold sm:text-4xl">{t.skills.title}</h2>
           <p className="mt-2 text-[var(--text-muted)]">{t.skills.subtitle}</p>
         </motion.div>
 
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <GlassCard hover={false}>
+        {/* Core stack — visible immediately (matches card grid in design) */}
+        <div className="mb-10">
+          <p className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-violet-400">
+            {t.skills.coreStack}
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {highlighted.map((skill, i) => (
+              <SkillCard key={skill.name} skill={skill} index={i} highlight />
+            ))}
+          </div>
+        </div>
+
+        <div className="grid items-start gap-10 lg:grid-cols-2">
+          <GlassCard hover={false} className="lg:sticky lg:top-24">
+            <p className="mb-3 text-center text-xs font-medium text-[var(--text-muted)]">
+              {t.skills.radarHint}
+            </p>
             <SkillRadar />
           </GlassCard>
 
-          <div className="space-y-6">
+          <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
             {skillCategories.map((cat) => {
               const items = skills.filter((s) => s.category === cat);
               if (items.length === 0) return null;
               const label = t.skills.categories[cat];
               return (
-                <div key={cat}>
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-violet-400">
+                <div key={cat} className="contents">
+                  <h3 className="w-full pt-2 text-sm font-semibold uppercase tracking-wider text-violet-400">
                     {label}
                   </h3>
-                  <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
-                    {items.map((skill, i) => (
-                      <motion.div
-                        key={skill.name}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.04 }}
-                        whileHover={{
-                          y: -6,
-                          boxShadow: `0 12px 32px ${skill.color}33`,
-                        }}
-                        className="animate-float cursor-default rounded-2xl glass-panel px-4 py-3 text-center"
-                        style={{
-                          animationDelay: `${i * 0.15}s`,
-                          borderColor: `${skill.color}44`,
-                        }}
-                      >
-                        <div
-                          className="mx-auto mb-1 h-2 w-12 rounded-full"
-                          style={{
-                            background: `linear-gradient(90deg, ${skill.color}, transparent)`,
-                          }}
-                        />
-                        <span className="font-semibold">{skill.name}</span>
-                        <p className="mt-0.5 text-xs text-[var(--text-muted)]">
-                          {skill.level}%
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
+                  {items.map((skill) => {
+                    const idx = cardIndex++;
+                    return (
+                      <SkillCard key={skill.name} skill={skill} index={idx} />
+                    );
+                  })}
                 </div>
               );
             })}
