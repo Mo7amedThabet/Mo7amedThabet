@@ -13,7 +13,7 @@ import {
 } from "@/data/skills";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { cn } from "@/lib/utils";
-import { fadeUp, scaleIn, tapPress, viewport } from "@/lib/motion";
+import { fadeUp, scaleIn, viewport } from "@/lib/motion";
 
 const featuredSet = new Set<string>(featuredSkills);
 
@@ -51,6 +51,17 @@ function polarPoint(cx: number, cy: number, r: number, angle: number) {
   };
 }
 
+/** Staggered duration/delay so cards breathe out of sync */
+function skillPulseTiming(name: string, index: number) {
+  let hash = index * 31;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash + name.charCodeAt(i) * (i + 7)) % 97;
+  }
+  const duration = 2.6 + (hash % 18) / 10;
+  const delay = (hash % 28) / 10;
+  return { duration, delay };
+}
+
 function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.25 });
@@ -58,10 +69,12 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const reduceMotion = useReducedMotion();
 
   const show = reduceMotion || isInView;
+  const pulse = skillPulseTiming(skill.name, index);
 
   return (
     <motion.div
       ref={ref}
+      className="inline-block"
       initial={{ opacity: 0, y: 12 }}
       animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
       transition={{
@@ -69,35 +82,49 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         ease: [0.22, 1, 0.36, 1],
         delay: show ? Math.min(index * 0.04, 0.4) : 0,
       }}
-      whileTap={tapPress}
-      className={cn(
-        "min-w-[6.75rem] cursor-default rounded-2xl glass-panel px-3 py-2.5 text-center",
-        "transition-[transform,box-shadow] duration-150 ease-out",
-        "hover:-translate-y-1 hover:scale-[1.03] hover:shadow-lg",
-        highlight && "ring-1 ring-violet-500/50",
-      )}
-      style={{ borderColor: `${skill.color}44` }}
     >
-      <div className="mx-auto mb-1.5 h-1.5 w-10 overflow-hidden rounded-full bg-white/10">
-        <motion.div
-          className="h-full w-full rounded-full"
-          style={{
-            background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,
-            transformOrigin: "left center",
-          }}
-          initial={{ scaleX: 0 }}
-          animate={show ? { scaleX: skill.level / 100 } : { scaleX: 0 }}
-          transition={{
-            duration: 0.45,
-            ease: [0.22, 1, 0.36, 1],
-            delay: show ? 0.06 + Math.min(index * 0.02, 0.25) : 0,
-          }}
-        />
+      <div
+        tabIndex={0}
+        className={cn(
+          "min-w-[6.75rem] cursor-default rounded-2xl glass-panel px-3 py-2.5 text-center outline-none",
+          "transition-[box-shadow,border-color] duration-200 ease-out",
+          !reduceMotion && "skill-card-pulse",
+          highlight && "ring-1 ring-violet-500/50",
+        )}
+        style={{
+          borderColor: `${skill.color}55`,
+          ["--skill-glow" as string]: skill.color,
+          ...(show && !reduceMotion
+            ? {
+                animationDuration: `${pulse.duration}s`,
+                animationDelay: `${pulse.delay}s`,
+              }
+            : {}),
+        }}
+      >
+        <div className="mx-auto mb-1.5 h-1.5 w-10 overflow-hidden rounded-full bg-white/10">
+          <motion.div
+            className="h-full w-full rounded-full"
+            style={{
+              background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,
+              transformOrigin: "left center",
+            }}
+            initial={{ scaleX: 0 }}
+            animate={show ? { scaleX: skill.level / 100 } : { scaleX: 0 }}
+            transition={{
+              duration: 0.45,
+              ease: [0.22, 1, 0.36, 1],
+              delay: show ? 0.06 + Math.min(index * 0.02, 0.25) : 0,
+            }}
+          />
+        </div>
+        <span className="relative z-[1] block text-sm font-semibold leading-tight">
+          {skill.name}
+        </span>
+        <p className="relative z-[1] mt-0.5 text-xs tabular-nums text-[var(--text-muted)]">
+          {skill.level}%
+        </p>
       </div>
-      <span className="block text-sm font-semibold leading-tight">{skill.name}</span>
-      <p className="mt-0.5 text-xs tabular-nums text-[var(--text-muted)]">
-        {skill.level}%
-      </p>
     </motion.div>
   );
 }
@@ -118,7 +145,7 @@ function SkillCategoryBlock({
       <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-violet-400">
         {label}
       </h3>
-      <div className="flex flex-wrap justify-center gap-2.5 sm:justify-start">
+      <div className="flex flex-wrap justify-center gap-3 py-1 sm:justify-start">
         {items.map((skill, i) => (
           <SkillCard
             key={skill.name}

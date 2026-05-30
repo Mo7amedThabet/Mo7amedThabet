@@ -111,9 +111,66 @@ html[dir="rtl"] body {
   animation: glow-pulse 4s ease-in-out infinite;
 }
 
+/* Skill cards — each pulses on its own timing */
+@keyframes skill-card-breathe {
+  0%,
+  100% {
+    transform: scale(0.93);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.skill-card-pulse {
+  position: relative;
+  z-index: 0;
+  transform: scale(1);
+  animation: skill-card-breathe ease-in-out infinite;
+  will-change: transform;
+}
+
+.skill-card-pulse::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(
+    circle at 50% 55%,
+    color-mix(in srgb, var(--skill-glow) 55%, transparent),
+    transparent 72%
+  );
+  filter: blur(10px);
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.skill-card-pulse:hover,
+.skill-card-pulse:focus-visible {
+  animation-play-state: paused;
+  transform: scale(1.06);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--skill-glow) 35%, transparent),
+    0 12px 36px color-mix(in srgb, var(--skill-glow) 42%, transparent),
+    0 4px 16px color-mix(in srgb, var(--skill-glow) 28%, transparent);
+}
+
+.skill-card-pulse:hover::before,
+.skill-card-pulse:focus-visible::before {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
-  .animate-glow-pulse {
+  .animate-glow-pulse,
+  .skill-card-pulse {
     animation: none;
+  }
+
+  .skill-card-pulse:hover,
+  .skill-card-pulse:focus-visible {
+    transform: none;
   }
 }
