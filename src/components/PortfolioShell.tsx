@@ -10,6 +10,7 @@ import { Projects } from "@/components/sections/Projects";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { PortfolioGame } from "@/components/game/PortfolioGame";
+import { gentleTransition } from "@/lib/motion";
 
 export function PortfolioShell() {
   const { viewMode } = useApp();
@@ -25,10 +26,10 @@ export function PortfolioShell() {
         {viewMode === "website" ? (
           <motion.main
             key="website"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={gentleTransition}
             className="relative z-10"
           >
             <Hero />
@@ -40,10 +41,10 @@ export function PortfolioShell() {
         ) : (
           <motion.div
             key="game"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={gentleTransition}
             className="relative z-10"
           >
             <PortfolioGame />

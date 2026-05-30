@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { gentleTransition, viewport } from "@/lib/motion";
 
 interface ProjectCardProps {
   project: Project;
@@ -32,12 +33,13 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.06 }}
+      viewport={viewport}
+      transition={{ ...gentleTransition, delay: index * 0.07 }}
+      whileHover={{ y: -6 }}
     >
-      <GlassCard className="flex h-full flex-col">
+      <GlassCard className="flex h-full flex-col" reveal={false} hover>
         <div className="mb-3 flex items-start justify-between gap-2">
           <h3 className="text-lg font-bold leading-tight">{project.name}</h3>
           <div className="flex shrink-0 gap-1">
@@ -69,13 +71,18 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
         </p>
 
         <div className="mb-4 flex flex-wrap gap-1.5">
-          {project.techStack.map((tag) => (
-            <span
+          {project.techStack.map((tag, ti) => (
+            <motion.span
               key={tag}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={viewport}
+              transition={{ delay: index * 0.05 + ti * 0.04 }}
+              whileHover={{ scale: 1.06, y: -2 }}
               className="rounded-lg bg-violet-500/10 px-2 py-0.5 text-xs text-violet-300"
             >
               {tag}
-            </span>
+            </motion.span>
           ))}
         </div>
 

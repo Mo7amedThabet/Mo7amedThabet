@@ -13,6 +13,12 @@ import {
 } from "@/data/skills";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { cn } from "@/lib/utils";
+import {
+  fadeUp,
+  gentleTransition,
+  scaleIn,
+  viewport,
+} from "@/lib/motion";
 
 const featuredSet = new Set<string>(featuredSkills);
 
@@ -51,9 +57,10 @@ function SkillCard({
       initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ delay: Math.min(index * 0.03, 0.3) }}
+      transition={{ ...gentleTransition, delay: Math.min(index * 0.03, 0.3) }}
       whileHover={{
-        y: -4,
+        y: -5,
+        scale: 1.03,
         boxShadow: `0 10px 28px ${skill.color}33`,
       }}
       className={cn(
@@ -87,10 +94,22 @@ function SkillCategoryBlock({
 }) {
   if (items.length === 0) return null;
   return (
-    <div key={category}>
-      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-violet-400">
+    <motion.div
+      key={category}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewport}
+    >
+      <motion.h3
+        className="mb-3 text-sm font-semibold uppercase tracking-wider text-violet-400"
+        initial={{ opacity: 0, x: -8 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={viewport}
+        transition={gentleTransition}
+      >
         {label}
-      </h3>
+      </motion.h3>
       <div className="flex flex-wrap justify-center gap-2.5 sm:justify-start">
         {items.map((skill, i) => (
           <SkillCard
@@ -100,7 +119,7 @@ function SkillCategoryBlock({
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -191,9 +210,10 @@ function SkillRadar() {
         fill="url(#radarFill)"
         stroke="#a78bfa"
         strokeWidth="2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.85 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, scale: 0.88 }}
+        animate={{ opacity: 0.9, scale: 1 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        style={{ transformOrigin: `${center}px ${center}px` }}
       />
       {points.map(({ label, skill }) => (
         <text
@@ -236,9 +256,10 @@ export function Skills() {
     <section id="skills" className="scroll-mt-24 px-4 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
           className="mb-8 text-center"
         >
           <h2 className="text-3xl font-bold sm:text-4xl">{t.skills.title}</h2>
@@ -248,7 +269,13 @@ export function Skills() {
         </motion.div>
 
         {/* Radar + main stacks beside it */}
-        <div className="grid items-start gap-8 lg:grid-cols-[280px_1fr]">
+        <motion.div
+          className="grid items-start gap-8 lg:grid-cols-[280px_1fr]"
+          variants={scaleIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
           <GlassCard hover={false} className="flex flex-col items-center p-4">
             <p className="mb-2 text-center text-xs text-[var(--text-muted)]">
               {t.skills.radarHint}
@@ -259,12 +286,17 @@ export function Skills() {
           <div className="space-y-6">
             {besideRadarCategories.map(renderCategory)}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Remaining categories — full width below */}
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
+        <motion.div
+          className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewport}
+          transition={{ ...gentleTransition, delay: 0.1 }}
+        >
           {belowRadarCategories.map(renderCategory)}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

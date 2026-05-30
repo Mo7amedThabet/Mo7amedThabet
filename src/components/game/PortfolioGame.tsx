@@ -542,8 +542,9 @@ export function PortfolioGame() {
   return (
     <div className="flex min-h-screen flex-col items-center px-2 pb-8 pt-20 sm:px-4">
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="mb-3 max-w-3xl text-center"
       >
         <h1 className="text-2xl font-bold text-gradient sm:text-3xl">

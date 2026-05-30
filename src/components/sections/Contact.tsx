@@ -4,6 +4,14 @@ import { motion } from "framer-motion";
 import { Code2, Link2, Mail, MessageCircle, Phone } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { contactLinks } from "@/data/contact";
+import {
+  fadeUp,
+  hoverLift,
+  stagger,
+  staggerItem,
+  tapPress,
+  viewport,
+} from "@/lib/motion";
 
 const links = [
   {
@@ -50,17 +58,24 @@ export function Contact() {
     <section id="contact" className="scroll-mt-24 px-4 py-20">
       <div className="mx-auto max-w-4xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
           className="mb-12 text-center"
         >
           <h2 className="text-3xl font-bold sm:text-4xl">{t.contact.title}</h2>
           <p className="mt-2 text-[var(--text-muted)]">{t.contact.subtitle}</p>
         </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {links.map((link, i) => {
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {links.map((link) => {
             const Icon = link.icon;
             return (
               <motion.a
@@ -68,17 +83,18 @@ export function Contact() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ scale: 1.04, y: -4 }}
-                whileTap={{ scale: 0.98 }}
+                variants={staggerItem}
+                whileHover={hoverLift}
+                whileTap={tapPress}
                 className={`group flex items-center gap-4 rounded-2xl bg-gradient-to-br ${link.color} p-5 text-white shadow-lg`}
               >
-                <div className="rounded-xl bg-white/20 p-3 transition group-hover:bg-white/30">
+                <motion.div
+                  className="rounded-xl bg-white/20 p-3"
+                  whileHover={{ scale: 1.08, rotate: 3 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                >
                   <Icon className="h-6 w-6" />
-                </div>
+                </motion.div>
                 <div>
                   <p className="font-bold">{t.contact[link.labelKey]}</p>
                   <p className="text-xs text-white/80">
@@ -92,7 +108,7 @@ export function Contact() {
               </motion.a>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
