@@ -35,6 +35,7 @@ import {
 import { computeRoute } from "./cityPathfind";
 import { GameMapOverlay } from "./GameMapOverlay";
 import { BuildingModal } from "./BuildingModal";
+import { GameMobileControls } from "./GameMobileControls";
 
 function findProject(id?: string) {
   if (!id) return undefined;
@@ -196,6 +197,33 @@ export function PortfolioGame() {
     },
     [addGameScore, t.game.collected, unlockSection],
   );
+
+  const releaseAllSteer = useCallback(() => {
+    keysRef.current.up = false;
+    keysRef.current.down = false;
+    keysRef.current.left = false;
+    keysRef.current.right = false;
+  }, []);
+
+  const handleSteer = useCallback((key: "up" | "down" | "left" | "right", active: boolean) => {
+    audioRef.current?.start();
+    keysRef.current[key] = active;
+  }, []);
+
+  useEffect(() => {
+    const clear = () => releaseAllSteer();
+    window.addEventListener("blur", clear);
+    document.addEventListener("visibilitychange", clear);
+    return () => {
+      window.removeEventListener("blur", clear);
+      document.removeEventListener("visibilitychange", clear);
+    };
+  }, [releaseAllSteer]);
+
+  const handleEnterNearby = useCallback(() => {
+    const near = getNearestBuilding();
+    if (near) openBuilding(near);
+  }, [getNearestBuilding, openBuilding]);
 
   const getModalContent = (b: CityBuilding) => {
     const proj = findProject(b.projectId);
@@ -521,7 +549,10 @@ export function PortfolioGame() {
         <h1 className="text-2xl font-bold text-gradient sm:text-3xl">
           {t.game.title}
         </h1>
-        <p className="mt-1 text-xs text-[var(--text-muted)] sm:text-sm">
+        <p className="mt-1 text-xs text-[var(--text-muted)] sm:text-sm md:hidden">
+          {t.game.hintMobile}
+        </p>
+        <p className="mt-1 hidden text-xs text-[var(--text-muted)] sm:text-sm md:block">
           {t.game.hint}
         </p>
       </motion.div>
@@ -588,7 +619,10 @@ export function PortfolioGame() {
         )}
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border-2 border-violet-500/40 shadow-2xl shadow-violet-500/20">
+      <div
+        className="relative touch-none overflow-hidden rounded-2xl border-2 border-violet-500/40 shadow-2xl shadow-violet-500/20"
+        style={{ WebkitTouchCallout: "none" }}
+      >
         <canvas
           ref={canvasRef}
           width={VIEW_W}
@@ -596,8 +630,24 @@ export function PortfolioGame() {
           className="block max-w-full bg-[#0c1a2e]"
           style={{ width: "min(100vw - 1rem, 960px)", height: "auto" }}
         />
+        <GameMobileControls
+          onSteer={handleSteer}
+          onSteerReleaseAll={releaseAllSteer}
+          onEnter={handleEnterNearby}
+          showEnter={!!nearbyBuilding && !modalBuilding}
+          enterLabel={
+            nearbyBuilding
+              ? `${t.game.enterBuilding} — ${
+                  nearbyBuilding.projectId
+                    ? nearbyBuilding.labelKey
+                    : buildingLabels[nearbyBuilding.labelKey]
+                }`
+              : t.game.enterBuilding
+          }
+          disabled={mapOpen || !!modalBuilding}
+        />
         {nearbyBuilding && !modalBuilding && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-600/90 px-4 py-1.5 text-xs font-semibold text-white shadow-lg">
+          <div className="absolute bottom-3 left-1/2 hidden -translate-x-1/2 rounded-full bg-emerald-600/90 px-4 py-1.5 text-xs font-semibold text-white shadow-lg md:block">
             {t.game.pressE} —{" "}
             {nearbyBuilding.projectId
               ? nearbyBuilding.labelKey

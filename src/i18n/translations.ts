@@ -68,6 +68,9 @@ export const translations = {
     game: {
       title: "Portfolio City",
       hint: "WASD drive · M map · E enter · L lights · Space horn · Toyota Corolla",
+      hintMobile:
+        "Use the arrow buttons on the game screen to drive · GPS for map · Enter when near a building",
+      enterBuilding: "Enter building",
       lightsOn: "Lights ON",
       lightsOff: "Lights OFF",
       horn: "Horn",
@@ -169,6 +172,9 @@ export const translations = {
     game: {
       title: "مدينة البورتفوليو",
       hint: "WASD قيادة · M خريطة · E دخول · L إضاءة · Space زمر · تويوتا كورولا",
+      hintMobile:
+        "استخدم أزرار الأسهم على شاشة اللعبة للتحريك · GPS للخريطة · ادخل المبنى لما تقرب",
+      enterBuilding: "ادخل المبنى",
       lightsOn: "الإضاءة شغالة",
       lightsOff: "الإضاءة طافية",
       horn: "زمر",
