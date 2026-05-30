@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import {
   featuredSkills,
@@ -9,74 +10,60 @@ import {
   skillCategories,
   skills,
   type Skill,
+  type SkillCategory,
 } from "@/data/skills";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { cn } from "@/lib/utils";
+
+const featuredSet = new Set<string>(featuredSkills);
+
+const defaultOpenCategories: SkillCategory[] = ["backend", "framework"];
 
 function roundCoord(n: number) {
   return Math.round(n * 100) / 100;
 }
 
-function polarPoint(
-  cx: number,
-  cy: number,
-  r: number,
-  angle: number,
-): { x: number; y: number } {
+function polarPoint(cx: number, cy: number, r: number, angle: number) {
   return {
     x: roundCoord(cx + r * Math.cos(angle)),
     y: roundCoord(cy + r * Math.sin(angle)),
   };
 }
 
-function SkillCard({
-  skill,
-  index,
-  highlight = false,
-}: {
-  skill: Skill;
-  index: number;
-  highlight?: boolean;
-}) {
+function SkillChip({ skill }: { skill: Skill }) {
+  const highlight = featuredSet.has(skill.name);
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.03 }}
-      whileHover={{
-        y: -6,
-        boxShadow: `0 12px 32px ${skill.color}33`,
-      }}
-      className={`animate-float min-w-[7.5rem] cursor-default rounded-2xl px-4 py-3 text-center ${
-        highlight
-          ? "glass-panel ring-2 ring-violet-500/60"
-          : "glass-panel"
-      }`}
-      style={{
-        animationDelay: `${index * 0.12}s`,
-        borderColor: `${skill.color}44`,
-      }}
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5",
+        highlight && "border-violet-500/40 bg-violet-500/10",
+      )}
+      style={{ borderColor: highlight ? undefined : `${skill.color}22` }}
     >
-      <div
-        className="mx-auto mb-1 h-2 w-12 rounded-full"
+      <span
+        className="h-1 shrink-0 rounded-full"
         style={{
-          background: `linear-gradient(90deg, ${skill.color}, transparent)`,
+          width: `${Math.max(skill.level * 0.36, 18)}px`,
+          maxWidth: 40,
+          background: skill.color,
         }}
       />
-      <span className="text-sm font-semibold">{skill.name}</span>
-      <p className="mt-0.5 text-xs text-[var(--text-muted)]">{skill.level}%</p>
-    </motion.div>
+      <span className="min-w-0 flex-1 truncate text-xs font-medium">
+        {skill.name}
+      </span>
+      <span className="shrink-0 text-[10px] tabular-nums text-[var(--text-muted)]">
+        {skill.level}%
+      </span>
+    </div>
   );
 }
 
-function SkillRadar() {
+function SkillRadar({ size = 240 }: { size?: number }) {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
 
-  const size = 300;
   const center = size / 2;
-  const radius = size / 2 - 48;
+  const radius = size / 2 - 40;
   const count = radarSkills.length;
   const angleStep = (2 * Math.PI) / count;
 
@@ -84,39 +71,40 @@ function SkillRadar() {
     const points = radarSkills.map((skill, i) => {
       const angle = i * angleStep - Math.PI / 2;
       const r = (skill.level / 100) * radius;
-      const tip = polarPoint(center, center, r, angle);
-      const label = polarPoint(center, center, radius + 26, angle);
-      return { tip, label, skill };
+      return {
+        tip: polarPoint(center, center, r, angle),
+        label: polarPoint(center, center, radius + 20, angle),
+        skill,
+      };
     });
-
-    const polygon = points.map((p) => `${p.tip.x},${p.tip.y}`).join(" ");
-
-    const gridPolygons = [0.25, 0.5, 0.75, 1].map((scale) =>
-      radarSkills
-        .map((_, i) => {
-          const angle = i * angleStep - Math.PI / 2;
-          const pt = polarPoint(center, center, radius * scale, angle);
-          return `${pt.x},${pt.y}`;
-        })
-        .join(" "),
-    );
-
-    const spokes = radarSkills.map((_, i) => {
-      const angle = i * angleStep - Math.PI / 2;
-      const end = polarPoint(center, center, radius, angle);
-      return { x2: end.x, y2: end.y };
-    });
-
-    return { points, polygon, gridPolygons, spokes };
+    return {
+      points,
+      polygon: points.map((p) => `${p.tip.x},${p.tip.y}`).join(" "),
+      gridPolygons: [0.25, 0.5, 0.75, 1].map((scale) =>
+        radarSkills
+          .map((_, i) => {
+            const angle = i * angleStep - Math.PI / 2;
+            const pt = polarPoint(center, center, radius * scale, angle);
+            return `${pt.x},${pt.y}`;
+          })
+          .join(" "),
+      ),
+      spokes: radarSkills.map((_, i) => {
+        const angle = i * angleStep - Math.PI / 2;
+        const end = polarPoint(center, center, radius, angle);
+        return { x2: end.x, y2: end.y };
+      }),
+    };
   }, [angleStep, center, radius]);
 
   if (!mounted) {
     return (
       <div
-        className="mx-auto flex h-[300px] w-[300px] items-center justify-center"
+        className="mx-auto flex items-center justify-center"
+        style={{ width: size, height: size }}
         aria-hidden
       >
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/40 border-t-violet-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500/40 border-t-violet-500" />
       </div>
     );
   }
@@ -124,126 +112,225 @@ function SkillRadar() {
   const { points, polygon, gridPolygons, spokes } = geometry;
 
   return (
-    <div className="relative mx-auto flex justify-center">
-      <svg width={size} height={size} className="overflow-visible">
-        {gridPolygons.map((pts, idx) => (
-          <polygon
-            key={idx}
-            points={pts}
-            fill="none"
-            stroke="currentColor"
-            className="text-violet-500/20"
-            strokeWidth="1"
-          />
-        ))}
-        {spokes.map((spoke, i) => (
-          <line
-            key={i}
-            x1={center}
-            y1={center}
-            x2={spoke.x2}
-            y2={spoke.y2}
-            className="stroke-violet-500/15"
-            strokeWidth="1"
-          />
-        ))}
-        <defs>
-          <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.3" />
-          </linearGradient>
-        </defs>
-        <motion.polygon
-          points={polygon}
-          fill="url(#radarFill)"
-          stroke="#a78bfa"
-          strokeWidth="2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.85 }}
-          transition={{ duration: 0.6 }}
+    <svg width={size} height={size} className="mx-auto overflow-visible">
+      {gridPolygons.map((pts, idx) => (
+        <polygon
+          key={idx}
+          points={pts}
+          fill="none"
+          stroke="currentColor"
+          className="text-violet-500/20"
+          strokeWidth="1"
         />
-        {points.map(({ label, skill }) => (
-          <text
-            key={skill.name}
-            x={label.x}
-            y={label.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            className={`font-medium ${
-              skill.category === "backend"
-                ? "fill-violet-300 text-[8px]"
-                : "fill-[var(--text-muted)] text-[8px]"
-            }`}
+      ))}
+      {spokes.map((spoke, i) => (
+        <line
+          key={i}
+          x1={center}
+          y1={center}
+          x2={spoke.x2}
+          y2={spoke.y2}
+          className="stroke-violet-500/15"
+          strokeWidth="1"
+        />
+      ))}
+      <defs>
+        <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <motion.polygon
+        points={polygon}
+        fill="url(#radarFill)"
+        stroke="#a78bfa"
+        strokeWidth="2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.85 }}
+        transition={{ duration: 0.5 }}
+      />
+      {points.map(({ label, skill }) => (
+        <text
+          key={skill.name}
+          x={label.x}
+          y={label.y}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          className="fill-[var(--text-muted)] text-[7px] font-medium"
+        >
+          {skill.name.length > 11
+            ? skill.name.slice(0, 9) + "…"
+            : skill.name}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
+function CategoryPanel({
+  category,
+  label,
+  items,
+  open,
+  onToggle,
+}: {
+  category: SkillCategory;
+  label: string;
+  items: Skill[];
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03]">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-start transition hover:bg-white/5"
+        aria-expanded={open}
+      >
+        <span className="text-xs font-semibold uppercase tracking-wide text-violet-400">
+          {label}
+        </span>
+        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)]">
+          {items.length}
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform",
+              open && "rotate-180",
+            )}
+          />
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key={category}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
           >
-            {skill.name.length > 14
-              ? skill.name.slice(0, 12) + "…"
-              : skill.name}
-          </text>
-        ))}
-      </svg>
+            <div className="grid grid-cols-2 gap-1.5 px-2 pb-2 sm:grid-cols-3">
+              {items.map((skill) => (
+                <SkillChip key={skill.name} skill={skill} />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export function Skills() {
   const { t } = useApp();
+  const [showRadar, setShowRadar] = useState(false);
+  const [openCats, setOpenCats] = useState<Set<SkillCategory>>(
+    () => new Set(defaultOpenCategories),
+  );
 
-  const highlighted = featuredSkills
-    .map((name) => skills.find((s) => s.name === name))
-    .filter((s): s is Skill => s != null);
+  const toggleCat = (cat: SkillCategory) => {
+    setOpenCats((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
 
-  let cardIndex = 0;
+  const expandAll = () => setOpenCats(new Set(skillCategories));
+  const collapseAll = () => setOpenCats(new Set(defaultOpenCategories));
 
   return (
-    <section id="skills" className="scroll-mt-24 px-4 py-20">
+    <section id="skills" className="scroll-mt-24 px-4 py-14 sm:py-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-10 text-center"
+          className="mb-6 text-center"
         >
           <h2 className="text-3xl font-bold sm:text-4xl">{t.skills.title}</h2>
-          <p className="mt-2 text-[var(--text-muted)]">{t.skills.subtitle}</p>
+          <p className="mt-1.5 text-sm text-[var(--text-muted)]">
+            {t.skills.subtitle}
+          </p>
         </motion.div>
 
-        {/* Core stack — visible immediately (matches card grid in design) */}
-        <div className="mb-10">
-          <p className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-violet-400">
-            {t.skills.coreStack}
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {highlighted.map((skill, i) => (
-              <SkillCard key={skill.name} skill={skill} index={i} highlight />
-            ))}
-          </div>
-        </div>
-
-        <div className="grid items-start gap-10 lg:grid-cols-2">
-          <GlassCard hover={false} className="lg:sticky lg:top-24">
-            <p className="mb-3 text-center text-xs font-medium text-[var(--text-muted)]">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,240px)_1fr] lg:items-start">
+          {/* Radar — compact; toggle on mobile */}
+          <div className="lg:block">
+            <button
+              type="button"
+              onClick={() => setShowRadar((v) => !v)}
+              className="mb-2 flex w-full items-center justify-between rounded-lg glass-panel px-3 py-2 text-xs font-medium lg:hidden"
+            >
               {t.skills.radarHint}
-            </p>
-            <SkillRadar />
-          </GlassCard>
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 transition-transform",
+                  showRadar && "rotate-180",
+                )}
+              />
+            </button>
+            <GlassCard hover={false} className="hidden p-4 lg:block">
+              <p className="mb-2 text-center text-[10px] text-[var(--text-muted)]">
+                {t.skills.radarHint}
+              </p>
+              <SkillRadar size={220} />
+            </GlassCard>
+            <AnimatePresence>
+              {showRadar && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden lg:hidden"
+                >
+                  <GlassCard hover={false} className="p-3">
+                    <SkillRadar size={200} />
+                  </GlassCard>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-          <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
+          {/* Skills list — compact */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-400">
+                {t.skills.coreStack}
+              </p>
+              <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={expandAll}
+                className="rounded-lg px-2.5 py-1 text-[10px] text-[var(--text-muted)] hover:bg-white/10"
+              >
+                {t.skills.expandAll}
+              </button>
+              <button
+                type="button"
+                onClick={collapseAll}
+                className="rounded-lg px-2.5 py-1 text-[10px] text-[var(--text-muted)] hover:bg-white/10"
+              >
+                {t.skills.collapseAll}
+              </button>
+              </div>
+            </div>
+
             {skillCategories.map((cat) => {
               const items = skills.filter((s) => s.category === cat);
               if (items.length === 0) return null;
-              const label = t.skills.categories[cat];
               return (
-                <div key={cat} className="contents">
-                  <h3 className="w-full pt-2 text-sm font-semibold uppercase tracking-wider text-violet-400">
-                    {label}
-                  </h3>
-                  {items.map((skill) => {
-                    const idx = cardIndex++;
-                    return (
-                      <SkillCard key={skill.name} skill={skill} index={idx} />
-                    );
-                  })}
-                </div>
+                <CategoryPanel
+                  key={cat}
+                  category={cat}
+                  label={t.skills.categories[cat]}
+                  items={items}
+                  open={openCats.has(cat)}
+                  onToggle={() => toggleCat(cat)}
+                />
               );
             })}
           </div>
