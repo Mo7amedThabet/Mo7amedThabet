@@ -17,6 +17,8 @@ interface GameMobileControlsProps {
   showEnter: boolean;
   enterLabel: string;
   disabled?: boolean;
+  /** Overlay on canvas (enter only) vs bar below canvas (D-pad) */
+  variant?: "pad" | "enter";
 }
 
 function bindSteer(
@@ -52,7 +54,9 @@ function bindSteer(
 }
 
 const padBtn =
-  "flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-violet-400/50 bg-violet-950/85 text-white shadow-xl active:scale-95 active:border-cyan-400 active:bg-violet-700 select-none touch-manipulation";
+  "flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-violet-400/40 bg-violet-950/90 text-white shadow-md active:scale-95 active:border-cyan-400 active:bg-violet-700 select-none touch-manipulation sm:h-12 sm:w-12";
+
+const spacer = "h-11 w-11 min-h-[44px] min-w-[44px] sm:h-12 sm:w-12";
 
 export function GameMobileControls({
   onSteer,
@@ -61,40 +65,57 @@ export function GameMobileControls({
   showEnter,
   enterLabel,
   disabled,
+  variant = "pad",
 }: GameMobileControlsProps) {
   const releaseAll = () => {
     if (!disabled) onSteerReleaseAll?.();
   };
 
+  if (variant === "enter") {
+    if (!showEnter || !onEnter) return null;
+    return (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!disabled) onEnter();
+        }}
+        className="pointer-events-auto absolute right-2 top-2 z-20 flex max-w-[55%] items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-2 text-[10px] font-bold text-white shadow-lg active:scale-95 touch-manipulation select-none md:hidden"
+      >
+        <DoorOpen className="h-4 w-4 shrink-0" />
+        <span className="truncate">{enterLabel}</span>
+      </button>
+    );
+  }
+
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-20 flex md:hidden items-end justify-between gap-2 p-3 pb-4"
+      className="mt-2 flex w-full justify-center md:hidden"
       onTouchEnd={releaseAll}
     >
-      {/* Direction pad — always visible on mobile */}
       <div
-        className="pointer-events-auto rounded-2xl border border-white/15 bg-black/50 p-2 shadow-2xl backdrop-blur-md"
+        className="rounded-xl border border-white/10 bg-black/40 px-2 py-1.5 shadow-lg backdrop-blur-sm"
         role="group"
         aria-label="Drive"
       >
-        <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
-          <div className="h-14 w-14" />
+        <div className="grid grid-cols-3 grid-rows-3 gap-1">
+          <div className={spacer} />
           <button
             type="button"
             aria-label="Forward"
             className={padBtn}
             {...bindSteer("up", onSteer, onSteerReleaseAll, disabled)}
           >
-            <ArrowUp className="h-7 w-7" strokeWidth={2.5} />
+            <ArrowUp className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.5} />
           </button>
-          <div className="h-14 w-14" />
+          <div className={spacer} />
           <button
             type="button"
             aria-label="Turn left"
             className={padBtn}
             {...bindSteer("left", onSteer, onSteerReleaseAll, disabled)}
           >
-            <ArrowLeft className="h-7 w-7" strokeWidth={2.5} />
+            <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.5} />
           </button>
           <button
             type="button"
@@ -102,7 +123,7 @@ export function GameMobileControls({
             className={padBtn}
             {...bindSteer("down", onSteer, onSteerReleaseAll, disabled)}
           >
-            <ArrowDown className="h-7 w-7" strokeWidth={2.5} />
+            <ArrowDown className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.5} />
           </button>
           <button
             type="button"
@@ -110,24 +131,10 @@ export function GameMobileControls({
             className={padBtn}
             {...bindSteer("right", onSteer, onSteerReleaseAll, disabled)}
           >
-            <ArrowRight className="h-7 w-7" strokeWidth={2.5} />
+            <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.5} />
           </button>
         </div>
       </div>
-
-      {showEnter && onEnter && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!disabled) onEnter();
-          }}
-          className="pointer-events-auto flex max-w-[min(46vw,220px)] items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-lg active:scale-95 touch-manipulation select-none"
-        >
-          <DoorOpen className="h-5 w-5 shrink-0" />
-          <span className="truncate">{enterLabel}</span>
-        </button>
-      )}
     </div>
   );
 }

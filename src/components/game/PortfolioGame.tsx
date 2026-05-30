@@ -631,8 +631,8 @@ export function PortfolioGame() {
           style={{ width: "min(100vw - 1rem, 960px)", height: "auto" }}
         />
         <GameMobileControls
+          variant="enter"
           onSteer={handleSteer}
-          onSteerReleaseAll={releaseAllSteer}
           onEnter={handleEnterNearby}
           showEnter={!!nearbyBuilding && !modalBuilding}
           enterLabel={
@@ -655,6 +655,16 @@ export function PortfolioGame() {
           </div>
         )}
       </div>
+
+      <GameMobileControls
+        variant="pad"
+        onSteer={handleSteer}
+        onSteerReleaseAll={releaseAllSteer}
+        onEnter={handleEnterNearby}
+        showEnter={false}
+        enterLabel=""
+        disabled={mapOpen || !!modalBuilding}
+      />
 
       <p className="mt-3 text-center text-xs text-[var(--text-muted)]">
         {t.game.switchHint}
