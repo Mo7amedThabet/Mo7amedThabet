@@ -80,3 +80,13 @@ export const hoverLift = {
 };
 
 export const tapPress = { scale: 0.97 };
+
+/** Per-skill card idle bob (offset by index in parent) */
+export function skillFloatTransition(index: number) {
+  return {
+    duration: 3.2 + (index % 7) * 0.25,
+    repeat: Infinity,
+    ease: "easeInOut" as const,
+    delay: (index % 10) * 0.12,
+  };
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useApp } from "@/context/AppContext";
 import {
   featuredSkills,
@@ -16,7 +16,12 @@ import { cn } from "@/lib/utils";
 import {
   fadeUp,
   gentleTransition,
+  quickTransition,
   scaleIn,
+  skillFloatTransition,
+  stagger,
+  staggerItem,
+  tapPress,
   viewport,
 } from "@/lib/motion";
 
@@ -49,34 +54,57 @@ function SkillCard({
 }: {
   skill: Skill;
   index: number;
-  highlight?: boolean;
 }) {
   const highlight = featuredSet.has(skill.name);
+  const reduceMotion = useReducedMotion();
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ ...gentleTransition, delay: Math.min(index * 0.03, 0.3) }}
-      whileHover={{
-        y: -5,
-        scale: 1.03,
-        boxShadow: `0 10px 28px ${skill.color}33`,
-      }}
-      className={cn(
-        "min-w-[6.75rem] rounded-2xl glass-panel px-3 py-2.5 text-center",
-        highlight && "ring-1 ring-violet-500/50",
-      )}
-      style={{ borderColor: `${skill.color}44` }}
-    >
-      <div
-        className="mx-auto mb-1 h-1.5 w-10 rounded-full"
-        style={{
-          background: `linear-gradient(90deg, ${skill.color}, transparent)`,
+    <motion.div variants={staggerItem} className="will-change-transform">
+      <motion.div
+        animate={reduceMotion ? undefined : { y: [0, -4, 0] }}
+        transition={skillFloatTransition(index)}
+        whileHover={{
+          y: -6,
+          scale: 1.04,
+          boxShadow: `0 12px 32px ${skill.color}40`,
         }}
-      />
-      <span className="text-sm font-semibold leading-tight">{skill.name}</span>
-      <p className="mt-0.5 text-xs text-[var(--text-muted)]">{skill.level}%</p>
+        whileTap={tapPress}
+        className={cn(
+          "min-w-[6.75rem] rounded-2xl glass-panel px-3 py-2.5 text-center",
+          highlight && "ring-1 ring-violet-500/50",
+        )}
+        style={{ borderColor: `${skill.color}44` }}
+      >
+      <div className="mx-auto mb-1.5 h-1.5 w-10 overflow-hidden rounded-full bg-white/10">
+        <motion.div
+          className="h-full rounded-full"
+          style={{
+            background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,
+          }}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${skill.level}%` }}
+          viewport={viewport}
+          transition={{ ...quickTransition, delay: 0.08 + (index % 12) * 0.03 }}
+        />
+      </div>
+      <motion.span
+        className="block text-sm font-semibold leading-tight"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={viewport}
+        transition={{ delay: 0.05 + (index % 12) * 0.02 }}
+      >
+        {skill.name}
+      </motion.span>
+      <motion.p
+        className="mt-0.5 text-xs tabular-nums text-[var(--text-muted)]"
+        initial={{ opacity: 0, y: 4 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={viewport}
+        transition={{ delay: 0.1 + (index % 12) * 0.02 }}
+      >
+        {skill.level}%
+      </motion.p>
+      </motion.div>
     </motion.div>
   );
 }
@@ -110,7 +138,13 @@ function SkillCategoryBlock({
       >
         {label}
       </motion.h3>
-      <div className="flex flex-wrap justify-center gap-2.5 sm:justify-start">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        className="flex flex-wrap justify-center gap-2.5 sm:justify-start"
+      >
         {items.map((skill, i) => (
           <SkillCard
             key={skill.name}
@@ -118,7 +152,7 @@ function SkillCategoryBlock({
             index={startIndex + i}
           />
         ))}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -215,19 +249,27 @@ function SkillRadar() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         style={{ transformOrigin: `${center}px ${center}px` }}
       />
-      {points.map(({ label, skill }) => (
-        <text
+      {points.map(({ label, skill }, i) => (
+        <motion.text
           key={skill.name}
           x={label.x}
           y={label.y}
           textAnchor="middle"
           dominantBaseline="middle"
           className="fill-[var(--text-muted)] text-[8px] font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.15,
+          }}
         >
           {skill.name.length > 12
             ? skill.name.slice(0, 10) + "…"
             : skill.name}
-        </text>
+        </motion.text>
       ))}
     </svg>
   );
@@ -276,12 +318,17 @@ export function Skills() {
           whileInView="visible"
           viewport={viewport}
         >
-          <GlassCard hover={false} className="flex flex-col items-center p-4">
-            <p className="mb-2 text-center text-xs text-[var(--text-muted)]">
-              {t.skills.radarHint}
-            </p>
-            <SkillRadar />
-          </GlassCard>
+          <motion.div
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <GlassCard hover={false} className="flex flex-col items-center p-4">
+              <p className="mb-2 text-center text-xs text-[var(--text-muted)]">
+                {t.skills.radarHint}
+              </p>
+              <SkillRadar />
+            </GlassCard>
+          </motion.div>
 
           <div className="space-y-6">
             {besideRadarCategories.map(renderCategory)}
