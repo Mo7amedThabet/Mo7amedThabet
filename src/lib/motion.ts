@@ -74,19 +74,10 @@ export const floatY = {
 };
 
 export const hoverLift = {
-  y: -5,
+  y: -4,
   scale: 1.02,
-  transition: quickTransition,
+  transition: { duration: 0.12, ease: gentleEase },
 };
 
 export const tapPress = { scale: 0.97 };
 
-/** Per-skill card idle bob (offset by index in parent) */
-export function skillFloatTransition(index: number) {
-  return {
-    duration: 3.2 + (index % 7) * 0.25,
-    repeat: Infinity,
-    ease: "easeInOut" as const,
-    delay: (index % 10) * 0.12,
-  };
-}
