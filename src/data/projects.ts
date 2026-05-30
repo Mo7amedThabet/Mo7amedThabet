@@ -29,7 +29,14 @@ export const projectsMock: Project[] = [
     name: "FILMBEAM",
     description:
       "Responsive movie web app with TMDB API — dynamic carousels, animated cards, and modern UI/UX across devices.",
-    techStack: ["React", "TMDB API", "CSS", "Responsive Design"],
+    techStack: [
+      "React",
+      "JavaScript",
+      "TMDB API",
+      "CSS3",
+      "Responsive Design",
+      "Vercel",
+    ],
     liveDemo: "https://filmbeam.vercel.app",
     githubLink: "https://github.com/Mo7amedThabet/FILMBEAM",
     visibility: "public",
@@ -41,7 +48,7 @@ export const projectsMock: Project[] = [
     name: "NEWSBEAM",
     description:
       "React news platform powered by News API with GSAP animations — fully responsive on all screen sizes.",
-    techStack: ["React", "GSAP", "News API", "JavaScript"],
+    techStack: ["React", "GSAP", "News API", "JavaScript", "CSS3", "Vercel"],
     liveDemo: "https://newsbeam-reactjs-gsap.vercel.app",
     githubLink: "https://github.com/Mo7amedThabet/NEWSBEAM-Reactjs-Gsap",
     visibility: "public",
@@ -53,7 +60,7 @@ export const projectsMock: Project[] = [
     name: "ProdcastBeam",
     description:
       "Modern podcast platform in progress — React.js with GSAP for smooth, engaging listener experiences.",
-    techStack: ["React", "Bootstrap", "GSAP", "CSS3"],
+    techStack: ["React", "Bootstrap", "GSAP", "CSS3", "JavaScript", "Vercel"],
     liveDemo: "https://prodcast-beam-react-js-bootstrap-gs.vercel.app",
     githubLink:
       "https://github.com/Mo7amedThabet/ProdcastBeam-react.js-bootstrap-gsap-css3-in-progress",
@@ -66,7 +73,7 @@ export const projectsMock: Project[] = [
     name: "Auth UI Cards",
     description:
       "Login & sign-up card interface built with React — glass-style components and form UX patterns.",
-    techStack: ["React", "JavaScript", "CSS"],
+    techStack: ["React", "JavaScript", "CSS3", "Responsive Design", "Vercel"],
     liveDemo: "https://react-login-sign-up-style-with-card.vercel.app",
     githubLink:
       "https://github.com/Mo7amedThabet/react-login-sign-up-style-with-card-items-simple-uncompleted-design-using-react-js",
@@ -78,7 +85,7 @@ export const projectsMock: Project[] = [
     name: "Bone Fractures Detector",
     description:
       "ML / computer vision project for detecting bone fractures — academic & healthcare tech exploration.",
-    techStack: ["Python", "Machine Learning"],
+    techStack: ["Python", "Machine Learning", "TensorFlow"],
     liveDemo: null,
     githubLink: "https://github.com/Mo7amedThabet/Bone_Fractures_Detector",
     visibility: "public",
@@ -92,11 +99,45 @@ export const projectsMock: Project[] = [
  */
 export const privateProjectsMock: Project[] = [
   {
+    id: "taskeen",
+    name: "Taskeen — Housing Management System",
+    description:
+      "Enterprise housing allocation platform — unit & applicant management, workflow approvals, admin dashboards, and reporting. ASP.NET Core Web API with Entity Framework Core and SQL Server, paired with a React admin UI.",
+    techStack: [
+      "ASP.NET Core",
+      "ASP.NET Web API",
+      "Entity Framework",
+      "C#",
+      "SQL Server",
+      "React",
+      "Redux",
+      "JWT",
+      "REST APIs",
+      "Swagger",
+    ],
+    liveDemo: null,
+    githubLink: null,
+    visibility: "private",
+    company: "Real Estate / Housing Sector",
+    clientName: "Taskeen Project",
+    showcaseUrl: null,
+    featured: true,
+  },
+  {
     id: "private-erp",
     name: "Enterprise ERP Dashboard",
     description:
       "Full-stack ERP module for inventory, sales, and reporting — role-based access, Arabic/English UI, and real-time charts for a retail client.",
-    techStack: ["React", "Node.js", "PostgreSQL", "Tailwind CSS"],
+    techStack: [
+      "React",
+      "TypeScript",
+      "ASP.NET Core",
+      "Entity Framework",
+      "SQL Server",
+      "Tailwind CSS",
+      "REST APIs",
+      "JWT",
+    ],
     liveDemo: null,
     githubLink: null,
     visibility: "private",
@@ -110,7 +151,14 @@ export const privateProjectsMock: Project[] = [
     name: "Booking & CRM Platform",
     description:
       "Custom booking system with admin panel, SMS reminders, and payment integration built for a service company.",
-    techStack: ["Next.js", "PHP", "MySQL", "REST API"],
+    techStack: [
+      "Next.js",
+      "PHP",
+      "MySQL",
+      "REST APIs",
+      "Payment Integration",
+      "SMS Integration",
+    ],
     liveDemo: null,
     githubLink: null,
     visibility: "private",
@@ -124,7 +172,15 @@ export const privateProjectsMock: Project[] = [
     name: "Corporate Employee Portal",
     description:
       "Internal HR portal — leave requests, announcements, document uploads, and manager approvals.",
-    techStack: ["React", "C#", ".NET", "SQL Server"],
+    techStack: [
+      "React",
+      "ASP.NET Core",
+      "C#",
+      "Entity Framework",
+      "SQL Server",
+      "JWT",
+      "REST APIs",
+    ],
     liveDemo: null,
     githubLink: "https://github.com/Mo7amedThabet",
     visibility: "private",

@@ -11,9 +11,9 @@ export const translations = {
     hero: {
       greeting: "Hello, I'm",
       name: "Mohamed Thabet",
-      role: "Full-Stack / Front-End Software Engineer",
+      role: "Full-Stack Software Engineer — .NET & React",
       tagline:
-        "I craft smooth, edgy digital experiences — from reactive UIs to scalable full-stack solutions.",
+        "Enterprise web apps with ASP.NET Core, Entity Framework, and React — from APIs and SQL Server to polished, responsive UIs.",
       ctaProjects: "View Projects",
       ctaContact: "Get in Touch",
       education: "Education",
@@ -28,7 +28,14 @@ export const translations = {
     },
     skills: {
       title: "Skills & Tech Stack",
-      subtitle: "Interactive radar of my core technologies",
+      subtitle: "Frontend, .NET backend, and databases — radar shows core strengths",
+      categories: {
+        backend: "Backend & APIs",
+        language: "Languages",
+        framework: "Frontend frameworks",
+        database: "Databases",
+        tool: "Tools",
+      },
     },
     projects: {
       title: "Projects",
@@ -99,7 +106,8 @@ export const translations = {
       },
       homeBody:
         "Mohamed Thabet — Full-Stack / Front-End Engineer. CS graduate from Sinai University.",
-      skillsBody: "JavaScript, React, Python, PHP, C#, Tailwind & more.",
+      skillsBody:
+        "React, Next.js, ASP.NET Core, EF, GSAP, Redux, Python, Flask, Git, Vercel & more.",
       certsBody: "AITB Python, MCIT diplomas, Udemy certifications.",
       contactBody: "WhatsApp, Email, GitHub, LinkedIn — let's connect.",
       projectsBody: "Each house in the compound is a live GitHub project.",
@@ -115,9 +123,9 @@ export const translations = {
     hero: {
       greeting: "مرحباً، أنا",
       name: "محمد ثابت",
-      role: "مهندس برمجيات Full-Stack / Front-End",
+      role: "مهندس Full-Stack — .NET و React",
       tagline:
-        "أصمم تجارب رقمية سلسة وعصرية — من واجهات تفاعلية إلى حلول full-stack قابلة للتوسع.",
+        "تطبيقات enterprise بـ ASP.NET Core و Entity Framework و React — من الـ APIs و SQL Server إلى واجهات متجاوبة.",
       ctaProjects: "عرض المشاريع",
       ctaContact: "تواصل معي",
       education: "التعليم",
@@ -132,7 +140,14 @@ export const translations = {
     },
     skills: {
       title: "المهارات والتقنيات",
-      subtitle: "رادار تفاعلي لأهم التقنيات",
+      subtitle: "Frontend و .NET Backend وقواعد البيانات — الرادار يعرض أهم المهارات",
+      categories: {
+        backend: "Backend و APIs",
+        language: "لغات البرمجة",
+        framework: "Frontend frameworks",
+        database: "قواعد البيانات",
+        tool: "أدوات",
+      },
     },
     projects: {
       title: "المشاريع",
@@ -203,7 +218,8 @@ export const translations = {
       },
       homeBody:
         "محمد ثابت — مهندس Full-Stack / Front-End. خريج علوم حاسب جامعة سيناء.",
-      skillsBody: "JavaScript، React، Python، PHP، C#، Tailwind والمزيد.",
+      skillsBody:
+        "React، Next.js، ASP.NET Core، EF، GSAP، Redux، Python، Flask، Git، Vercel والمزيد.",
       certsBody: "شهادات AITB و MCIT و Udemy.",
       contactBody: "واتساب، بريد، GitHub، LinkedIn.",
       projectsBody: "كل بيت في الكمبوند = مشروع على GitHub.",

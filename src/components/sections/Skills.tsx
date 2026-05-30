@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "@/context/AppContext";
-import { skills } from "@/data/skills";
+import { radarSkills, skillCategories, skills } from "@/data/skills";
 import { GlassCard } from "@/components/ui/GlassCard";
 
 /** Stable SVG coords — avoids server/client float drift on hydration */
@@ -31,11 +31,11 @@ function SkillRadar() {
   const size = 280;
   const center = size / 2;
   const radius = size / 2 - 40;
-  const count = skills.length;
+  const count = radarSkills.length;
   const angleStep = (2 * Math.PI) / count;
 
   const geometry = useMemo(() => {
-    const points = skills.map((skill, i) => {
+    const points = radarSkills.map((skill, i) => {
       const angle = i * angleStep - Math.PI / 2;
       const r = (skill.level / 100) * radius;
       const tip = polarPoint(center, center, r, angle);
@@ -46,7 +46,7 @@ function SkillRadar() {
     const polygon = points.map((p) => `${p.tip.x},${p.tip.y}`).join(" ");
 
     const gridPolygons = [0.25, 0.5, 0.75, 1].map((scale) =>
-      skills
+      radarSkills
         .map((_, i) => {
           const angle = i * angleStep - Math.PI / 2;
           const pt = polarPoint(center, center, radius * scale, angle);
@@ -55,7 +55,7 @@ function SkillRadar() {
         .join(" "),
     );
 
-    const spokes = skills.map((_, i) => {
+    const spokes = radarSkills.map((_, i) => {
       const angle = i * angleStep - Math.PI / 2;
       const end = polarPoint(center, center, radius, angle);
       return { x2: end.x, y2: end.y };
@@ -125,8 +125,8 @@ function SkillRadar() {
             dominantBaseline="middle"
             className="fill-[var(--text-muted)] text-[9px] font-medium"
           >
-            {skill.name.length > 10
-              ? skill.name.slice(0, 8) + "…"
+            {skill.name.length > 12
+              ? skill.name.slice(0, 10) + "…"
               : skill.name}
           </text>
         ))}
@@ -156,36 +156,50 @@ export function Skills() {
             <SkillRadar />
           </GlassCard>
 
-          <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
-            {skills.map((skill, i) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
-                whileHover={{
-                  y: -6,
-                  boxShadow: `0 12px 32px ${skill.color}33`,
-                }}
-                className="animate-float cursor-default rounded-2xl glass-panel px-4 py-3 text-center"
-                style={{
-                  animationDelay: `${i * 0.15}s`,
-                  borderColor: `${skill.color}44`,
-                }}
-              >
-                <div
-                  className="mx-auto mb-1 h-2 w-12 rounded-full"
-                  style={{
-                    background: `linear-gradient(90deg, ${skill.color}, transparent)`,
-                  }}
-                />
-                <span className="font-semibold">{skill.name}</span>
-                <p className="mt-0.5 text-xs text-[var(--text-muted)]">
-                  {skill.level}%
-                </p>
-              </motion.div>
-            ))}
+          <div className="space-y-6">
+            {skillCategories.map((cat) => {
+              const items = skills.filter((s) => s.category === cat);
+              if (items.length === 0) return null;
+              const label = t.skills.categories[cat];
+              return (
+                <div key={cat}>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-violet-400">
+                    {label}
+                  </h3>
+                  <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
+                    {items.map((skill, i) => (
+                      <motion.div
+                        key={skill.name}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.04 }}
+                        whileHover={{
+                          y: -6,
+                          boxShadow: `0 12px 32px ${skill.color}33`,
+                        }}
+                        className="animate-float cursor-default rounded-2xl glass-panel px-4 py-3 text-center"
+                        style={{
+                          animationDelay: `${i * 0.15}s`,
+                          borderColor: `${skill.color}44`,
+                        }}
+                      >
+                        <div
+                          className="mx-auto mb-1 h-2 w-12 rounded-full"
+                          style={{
+                            background: `linear-gradient(90deg, ${skill.color}, transparent)`,
+                          }}
+                        />
+                        <span className="font-semibold">{skill.name}</span>
+                        <p className="mt-0.5 text-xs text-[var(--text-muted)]">
+                          {skill.level}%
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
