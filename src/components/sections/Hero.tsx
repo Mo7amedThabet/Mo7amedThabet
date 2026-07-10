@@ -1,184 +1,187 @@
-"use client";
-
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { Award, GraduationCap, Sparkles } from "lucide-react";
-import { useApp } from "@/context/AppContext";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { scrollToId } from "@/lib/utils";
-import {
-  floatY,
-  gentleTransition,
-  hoverLift,
-  slideLeft,
-  slideRight,
-  stagger,
-  staggerItem,
-  tapPress,
-  viewport,
-} from "@/lib/motion";
-
-export function Hero() {
-  const { t } = useApp();
-
-  return (
-    <section
-      id="hero"
-      className="relative min-h-screen scroll-mt-24 px-4 pb-20 pt-28"
-    >
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-        <motion.div
-          variants={slideLeft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <motion.div
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 text-sm text-violet-400"
-            animate={{ scale: [1, 1.03, 1] }}
-            transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-          >
-            <motion.span
-              animate={{ rotate: [0, 12, -12, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-            >
-              <Sparkles className="h-4 w-4" />
-            </motion.span>
-            {t.hero.role}
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport}
-            transition={{ ...gentleTransition, delay: 0.08 }}
-            className="text-lg text-[var(--text-muted)]"
-          >
-            {t.hero.greeting}
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport}
-            transition={{ ...gentleTransition, delay: 0.14 }}
-            className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
-          >
-            <span className="text-gradient">{t.hero.name}</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport}
-            transition={{ ...gentleTransition, delay: 0.2 }}
-            className="mt-6 max-w-lg text-lg leading-relaxed text-[var(--text-muted)]"
-          >
-            {t.hero.tagline}
-          </motion.p>
-
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport}
-            className="mt-8 flex flex-wrap gap-4"
-          >
-            <motion.button
-              type="button"
-              variants={staggerItem}
-              whileHover={hoverLift}
-              whileTap={tapPress}
-              onClick={() => scrollToId("projects")}
-              className="rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg shadow-violet-500/30"
-            >
-              {t.hero.ctaProjects}
-            </motion.button>
-            <motion.button
-              type="button"
-              variants={staggerItem}
-              whileHover={hoverLift}
-              whileTap={tapPress}
-              onClick={() => scrollToId("contact")}
-              className="rounded-xl glass-panel px-6 py-3 font-semibold transition hover:border-violet-500/40"
-            >
-              {t.hero.ctaContact}
-            </motion.button>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          variants={slideRight}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          className="flex flex-col items-center gap-8"
-        >
-          <motion.div className="relative" animate={floatY}>
-            <div className="absolute -inset-4 animate-glow-pulse rounded-full bg-violet-500/20 blur-2xl" />
-            <motion.div
-              className="relative h-56 w-56 overflow-hidden rounded-full border-4 border-violet-400/50 shadow-2xl shadow-violet-500/30 sm:h-72 sm:w-72"
-              whileHover={{ scale: 1.03 }}
-              transition={gentleTransition}
-            >
-              <Image
-                src="/profile.png"
-                alt={t.hero.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 224px, 288px"
-              />
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport}
-            className="w-full max-w-md space-y-4"
-          >
-            <motion.div variants={staggerItem}>
-              <GlassCard className="!p-4" reveal={false} hover>
-                <div className="flex items-start gap-3">
-                  <GraduationCap className="mt-0.5 h-5 w-5 shrink-0 text-violet-400" />
-                  <div>
-                    <h3 className="font-semibold">{t.hero.education}</h3>
-                    <p className="mt-1 text-sm text-[var(--text-muted)]">
-                      {t.hero.educationText}
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div variants={staggerItem}>
-              <GlassCard className="!p-4" reveal={false} hover>
-                <div className="flex items-start gap-3">
-                  <Award className="mt-0.5 h-5 w-5 shrink-0 text-sky-400" />
-                  <div>
-                    <h3 className="font-semibold">{t.hero.certificates}</h3>
-                    <ul className="mt-2 space-y-1.5 text-sm text-[var(--text-muted)]">
-                      {t.hero.certItems.map((item, i) => (
-                        <motion.li
-                          key={item}
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={viewport}
-                          transition={{ delay: 0.25 + i * 0.06 }}
-                          className="flex gap-2"
-                        >
-                          <span className="text-violet-400">▸</span>
-                          {item}
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </GlassCard>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
+import { useMemo, useRef } from "react";
+import { useApp } from "@/context/AppContext";
+import { HeroPortrait } from "@/components/sections/HeroPortrait";
+import { SplitLetters } from "@/components/ui/SplitLetters";
+import { scrollToId } from "@/lib/utils";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function TaglineWithHighlights({
+  text,
+  highlights,
+}: {
+  text: string;
+  highlights: readonly string[];
+}) {
+  if (!highlights.length) return <>{text}</>;
+
+  const escaped = highlights.map((h) =>
+    h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
+  const segments = text.split(pattern).filter(Boolean);
+
+  return (
+    <>
+      {segments.map((segment, i) => {
+        const isHighlight = highlights.some(
+          (h) => h.toLowerCase() === segment.toLowerCase(),
+        );
+        return isHighlight ? (
+          <span key={i} className="hero-accent-text font-medium">
+            {segment}
+          </span>
+        ) : (
+          <span key={i}>{segment}</span>
+        );
+      })}
+    </>
+  );
+}
+
+export function Hero() {
+  const { t, locale, dir } = useApp();
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const { firstName, lastName } = useMemo(() => {
+    const parts = t.hero.name.trim().split(/\s+/);
+    const first = parts[0] ?? t.hero.name;
+    const last = parts.slice(1).join(" ");
+    if (locale === "en") {
+      return {
+        firstName: first.toUpperCase(),
+        lastName: last.toUpperCase(),
+      };
+    }
+    return { firstName: first, lastName: last };
+  }, [t.hero.name, locale]);
+
+  useGSAP(
+    () => {
+      if (!contentRef.current) return;
+
+      gsap.from("[data-hero-fade]", {
+        opacity: 0,
+        y: 24,
+        duration: 0.8,
+        stagger: 0.12,
+        delay: 0.15,
+        ease: "power3.out",
+      });
+
+      gsap.from("[data-hero-cta]", {
+        opacity: 0,
+        y: 16,
+        scale: 0.96,
+        duration: 0.6,
+        delay: 1.1,
+        ease: "back.out(1.4)",
+      });
+    },
+    { scope: sectionRef },
+  );
+
+  return (
+    <section
+      ref={sectionRef}
+      id="hero"
+      className="hero-cinematic relative flex min-h-[100svh] scroll-mt-24 items-center overflow-x-clip overflow-y-visible max-lg:min-h-[108svh]"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-overlay hero-noise" />
+      <div className="pointer-events-none absolute inset-0 hero-cinematic-mesh" />
+
+      <p className="absolute start-6 top-20 z-10 hidden font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--text-muted)] md:block lg:start-10">
+        MT · PORTFOLIO EDITION ©{new Date().getFullYear()}
+      </p>
+
+      <div
+        className="relative z-10 mx-auto flex w-full max-w-[1380px] flex-col gap-10 px-6 pb-28 pt-28 md:flex-row md:items-center md:justify-between md:gap-8 md:px-10 md:pb-16 lg:px-12 lg:pb-16"
+        dir="ltr"
+      >
+        <div
+          ref={contentRef}
+          dir={dir}
+          className="relative z-[35] order-1 flex w-full max-w-xl flex-col items-start text-start md:w-[42%] md:max-w-none lg:pe-6"
+        >
+          <p
+            data-hero-fade
+            className="mb-4 text-xs font-semibold uppercase tracking-[0.45em] text-[var(--text-muted)] sm:text-sm"
+          >
+            {t.hero.greeting}
+          </p>
+
+          <h1 className="w-full text-4xl font-bold leading-[0.95] tracking-tight text-[var(--text-primary)] sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+            <span className="flex flex-col gap-0 overflow-hidden">
+              <SplitLetters
+                as="span"
+                text={firstName}
+                className="block"
+                letterClassName="text-[var(--text-primary)]"
+                delay={0.25}
+                stagger={0.04}
+              />
+              {lastName ? (
+                <SplitLetters
+                  as="span"
+                  text={lastName}
+                  className="block"
+                  letterClassName="text-[var(--text-muted)]"
+                  delay={0.55}
+                  stagger={0.04}
+                />
+              ) : null}
+            </span>
+            <span
+              data-hero-fade
+              className="hero-accent-dot mt-2 inline-block h-3 w-3 rounded-full sm:h-4 sm:w-4"
+              aria-hidden
+            />
+          </h1>
+
+          <p
+            data-hero-fade
+            className="mt-8 max-w-md text-base leading-relaxed text-[var(--text-muted)] sm:text-lg md:max-w-lg md:text-xl"
+          >
+            <TaglineWithHighlights
+              text={t.hero.tagline}
+              highlights={t.hero.taglineHighlights}
+            />
+          </p>
+
+          <div data-hero-cta className="mt-10">
+            <button
+              type="button"
+              onClick={() => scrollToId("projects")}
+              className="hero-cta-btn group inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-semibold uppercase tracking-wider transition"
+            >
+              {t.hero.ctaProjects}
+              <span className="hero-cta-icon flex h-8 w-8 items-center justify-center rounded-full transition group-hover:scale-110">
+                <ArrowUpRight className="h-4 w-4" />
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div className="relative z-20 order-2 flex w-full shrink-0 items-center justify-center overflow-visible md:w-[50%] md:justify-end lg:w-[52%]">
+          <HeroPortrait />
+        </div>
+      </div>
+
+      <div className="absolute bottom-8 start-1/2 z-10 hidden -translate-x-1/2 lg:block">
+        <div className="flex flex-col items-center gap-2 text-[var(--text-muted)]">
+          <span className="text-[10px] uppercase tracking-[0.35em]">
+            {t.hero.scrollHint}
+          </span>
+          <span className="hero-scroll-line h-10 w-px bg-gradient-to-b from-[var(--accent)] to-transparent opacity-80" />
+        </div>
+      </div>
+    </section>
+  );
+}

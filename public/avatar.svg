@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" role="img" aria-label="Mohamed Thabet">
+  <defs>
+    <linearGradient id="bg" x1="60" y1="40" x2="340" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="0.5" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="120" y1="80" x2="280" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(200 320) rotate(90) scale(180)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C4B5FD" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#C4B5FD" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="200" cy="200" r="200" fill="url(#bg)"/>
+  <ellipse cx="200" cy="130" rx="110" ry="90" fill="url(#shine)"/>
+  <ellipse cx="200" cy="340" rx="150" ry="60" fill="url(#glow)"/>
+  <text x="200" y="228" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="128" font-weight="800" fill="#ffffff" fill-opacity="0.96">MT</text>
+</svg>

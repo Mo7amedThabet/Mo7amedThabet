@@ -4,17 +4,38 @@ export const translations = {
   en: {
     nav: {
       home: "Home",
+      about: "About",
       skills: "Skills",
       projects: "Projects",
       contact: "Contact",
     },
     hero: {
-      greeting: "Hello, I'm",
+      greeting: "Hello! I'm",
       name: "Mohamed Thabet",
       role: "Full-Stack Software Engineer — .NET & React",
       tagline:
-        "Enterprise web apps with ASP.NET Core, Entity Framework, and React — from APIs and SQL Server to polished, responsive UIs.",
-      ctaProjects: "View Projects",
+        "I build intelligent digital experiences combining high-performance code with striking visual design.",
+      taglineHighlights: [
+        "intelligent",
+        "high-performance",
+        "striking visual design",
+      ],
+      marqueeItems: [
+        "FULL-STACK DEVELOPER",
+        ".NET & REACT",
+        "ASP.NET CORE",
+        "NEXT.JS",
+        "ENTITY FRAMEWORK",
+      ],
+      preloaderMessages: [
+        "Loading portfolio assets...",
+        "Injecting React modules...",
+        "Compiling WebGL shaders...",
+        "Syncing GitHub projects...",
+      ],
+      preloaderHint: "Please wait",
+      scrollHint: "Scroll",
+      ctaProjects: "Explore Work",
       ctaContact: "Get in Touch",
       education: "Education",
       educationText: "Computer Science Graduate — Sinai University",
@@ -25,6 +46,11 @@ export const translations = {
         "Back-End Diploma — Ministry of Communications & IT (MCIT)",
         "Udemy: Data Structures, PHP, C#, C++, JavaScript, Dart",
       ],
+    },
+    about: {
+      creativeLabel: "CREATIVE",
+      roleTitle: "FULL-STACK DEVELOPER",
+      bio: "Full-Stack Software Engineer specializing in ASP.NET Core, Entity Framework, SQL Server, and React/Next.js — from scalable APIs and admin dashboards to polished, responsive front-ends.",
     },
     skills: {
       title: "Skills & Tech Stack",
@@ -120,17 +146,34 @@ export const translations = {
   ar: {
     nav: {
       home: "الرئيسية",
+      about: "نبذة",
       skills: "المهارات",
       projects: "المشاريع",
       contact: "تواصل",
     },
     hero: {
-      greeting: "مرحباً، أنا",
+      greeting: "مرحباً! أنا",
       name: "محمد ثابت",
       role: "مهندس Full-Stack — .NET و React",
       tagline:
-        "تطبيقات enterprise بـ ASP.NET Core و Entity Framework و React — من الـ APIs و SQL Server إلى واجهات متجاوبة.",
-      ctaProjects: "عرض المشاريع",
+        "أبني تجارب رقمية ذكية تجمع بين كود عالي الأداء وتصميم بصري مميز.",
+      taglineHighlights: ["ذكية", "عالي الأداء", "تصميم بصري مميز"],
+      marqueeItems: [
+        "مطور Full-Stack",
+        ".NET و React",
+        "ASP.NET CORE",
+        "NEXT.JS",
+        "ENTITY FRAMEWORK",
+      ],
+      preloaderMessages: [
+        "تحميل أصول البورتفوليو...",
+        "تهيئة وحدات React...",
+        "مزامنة مشاريع GitHub...",
+        "تجهيز الواجهة...",
+      ],
+      preloaderHint: "انتظر قليلاً",
+      scrollHint: "مرر",
+      ctaProjects: "استكشف الأعمال",
       ctaContact: "تواصل معي",
       education: "التعليم",
       educationText: "خريج علوم حاسب — جامعة سيناء",
@@ -141,6 +184,11 @@ export const translations = {
         "دبلومة Back-End — وزارة الاتصالات وتكنولوجيا المعلومات (MCIT)",
         "Udemy: هياكل البيانات، PHP، C#، C++، JavaScript، Dart",
       ],
+    },
+    about: {
+      creativeLabel: "إبداعي",
+      roleTitle: "مطور Full-Stack",
+      bio: "مهندس Full-Stack متخصص في ASP.NET Core و Entity Framework و SQL Server و React/Next.js — من الـ APIs ولوحات الإدارة إلى واجهات متجاوبة واحترافية.",
     },
     skills: {
       title: "المهارات والتقنيات",
