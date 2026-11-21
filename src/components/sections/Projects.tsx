@@ -18,7 +18,7 @@ type Tab = "public" | "private";
 export function Projects() {
   const { t } = useApp();
   const [publicProjects, setPublicProjects] = useState<Project[]>(projectsMock);
-  const [tab, setTab] = useState<Tab>("public");
+  const [tab, setTab] = useState<Tab>("private");
   const [loading, setLoading] = useState(true);
 
   const privateProjects = useMemo(() => privateProjectsMock, []);

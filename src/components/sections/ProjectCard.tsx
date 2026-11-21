@@ -102,7 +102,7 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 py-2 text-sm font-medium text-white"
               >
-                <Building2 className="h-3.5 w-3.5" />
+                <ExternalLink className="h-3.5 w-3.5" />
                 {labels.clientProject}
               </a>
             ) : (
@@ -111,41 +111,38 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
                 {labels.clientProject}
               </span>
             )
-          ) : project.liveDemo ? (
-            <a
-              href={project.liveDemo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-2 text-sm font-medium text-white transition hover:opacity-90"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              {labels.liveDemo}
-            </a>
           ) : (
-            <span className="flex flex-1 items-center justify-center rounded-xl bg-white/5 py-2 text-xs text-[var(--text-muted)]">
-              {labels.noDemo}
-            </span>
-          )}
+            <>
+              {project.liveDemo ? (
+                <a
+                  href={project.liveDemo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  {labels.liveDemo}
+                </a>
+              ) : (
+                <span className="flex flex-1 items-center justify-center rounded-xl bg-white/5 py-2 text-xs text-[var(--text-muted)]">
+                  {labels.noDemo}
+                </span>
+              )}
 
-          {project.githubLink ? (
-            <a
-              href={project.githubLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center rounded-xl glass-panel px-3 py-2 transition hover:border-violet-500/40"
-              aria-label={isPrivate ? labels.privateRepo : labels.source}
-              title={isPrivate ? labels.privateRepo : labels.source}
-            >
-              <Code2 className="h-4 w-4" />
-            </a>
-          ) : isPrivate ? (
-            <span
-              className="flex items-center justify-center rounded-xl glass-panel px-3 py-2 opacity-50"
-              title={labels.privateRepo}
-            >
-              <Lock className="h-4 w-4" />
-            </span>
-          ) : null}
+              {project.githubLink ? (
+                <a
+                  href={project.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center rounded-xl glass-panel px-3 py-2 transition hover:border-violet-500/40"
+                  aria-label={labels.source}
+                  title={labels.source}
+                >
+                  <Code2 className="h-4 w-4" />
+                </a>
+              ) : null}
+            </>
+          )}
         </div>
       </GlassCard>
     </motion.div>
