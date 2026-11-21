@@ -103,10 +103,10 @@ export const translations = {
       gameDesc: "Explore by playing",
     },
     game: {
-      title: "Portfolio City",
-      hint: "WASD drive · M map · E enter · L lights · Space horn · Toyota Corolla",
+      title: "Portfolio City 3D — Vice Edition",
+      hint: "WASD / Arrows: Drive · Space: Horn · L: Lights · C: Camera · E: Enter · M: Map",
       hintMobile:
-        "Arrow buttons below the map to drive · GPS for map · Enter when near a building",
+        "Use the on-screen pad to drive · tap Map / radar for fast travel · Enter near a building",
       enterBuilding: "Enter building",
       lightsOn: "Lights ON",
       lightsOff: "Lights OFF",
@@ -241,10 +241,10 @@ export const translations = {
       gameDesc: "استكشف باللعب",
     },
     game: {
-      title: "مدينة البورتفوليو",
-      hint: "WASD قيادة · M خريطة · E دخول · L إضاءة · Space زمر · تويوتا كورولا",
+      title: "مدينة البورتفوليو 3D — Vice",
+      hint: "WASD / أسهم: قيادة · Space: زمر · L: إضاءة · C: كاميرا · E: دخول · M: خريطة",
       hintMobile:
-        "أزرار الأسهم تحت الخريطة للتحريك · GPS للخريطة · ادخل المبنى لما تقرب",
+        "استخدم الـ pad للقيادة · اضغط الخريطة أو الرادار للانتقال السريع · ادخل المبنى لما تقرب",
       enterBuilding: "ادخل المبنى",
       lightsOn: "الإضاءة شغالة",
       lightsOff: "الإضاءة طافية",

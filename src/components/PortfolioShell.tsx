@@ -46,9 +46,9 @@ export function PortfolioShell() {
         ) : (
           <motion.div
             key="game"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={gentleTransition}
             className="relative z-10"
           >

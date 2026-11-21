@@ -90,11 +90,11 @@ export function GameMobileControls({
 
   return (
     <div
-      className="mt-2 flex w-full justify-center md:hidden"
+      className="pointer-events-auto absolute bottom-6 right-3 z-25 md:hidden"
       onTouchEnd={releaseAll}
     >
       <div
-        className="rounded-xl border border-white/10 bg-black/40 px-2 py-1.5 shadow-lg backdrop-blur-sm"
+        className="rounded-xl border border-white/15 bg-[#0f0a1f]/85 px-2 py-1.5 shadow-lg backdrop-blur-md"
         role="group"
         aria-label="Drive"
       >
