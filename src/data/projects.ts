@@ -25,6 +25,18 @@ export interface Project {
 /** Public repos — synced via /api/github */
 export const projectsMock: Project[] = [
   {
+    id: "cypra",
+    name: "CYPRA",
+    description:
+      "Software-house marketing site — brand story, services, and motion-driven UI built with React, Tailwind, and GSAP.",
+    techStack: ["React", "JavaScript", "Tailwind CSS", "GSAP", "Vercel"],
+    liveDemo: "https://cypra.vercel.app",
+    githubLink: "https://github.com/Mo7amedThabet/Cypra",
+    visibility: "public",
+    language: "JavaScript",
+    featured: true,
+  },
+  {
     id: "filmbeam",
     name: "FILMBEAM",
     description:
@@ -99,10 +111,70 @@ export const projectsMock: Project[] = [
  */
 export const privateProjectsMock: Project[] = [
   {
-    id: "taskeen",
-    name: "Taskeen — Housing Management System",
+    id: "solo-store",
+    name: "SOLO — Shopify Store",
     description:
-      "Enterprise housing allocation platform — unit & applicant management, workflow approvals, admin dashboards, and reporting. ASP.NET Core Web API with Entity Framework Core and SQL Server, paired with a React admin UI.",
+      "Custom Shopify theme for the SOLO brand — Liquid sections (Looks, Salon, Journal, Music), day/night atmosphere, RTL/i18n, and polished product storytelling for an Arabic/English storefront.",
+    techStack: [
+      "Shopify",
+      "Liquid",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "RTL / i18n",
+    ],
+    liveDemo: null,
+    githubLink: null,
+    visibility: "private",
+    company: "CYPRA",
+    clientName: "SOLO Store",
+    showcaseUrl: null,
+    featured: true,
+  },
+  {
+    id: "cypra-supermarket",
+    name: "CYPRA Supermarket Management System",
+    description:
+      "End-to-end supermarket platform: WPF POS (barcode, inventory, purchases, accounting, roles), multi-tenant SaaS API with subscriptions/payments, catalog wizard, e-commerce storefront, Flutter companion, AI stock forecast, and self-contained Windows installer.",
+    techStack: [
+      "C#",
+      ".NET",
+      "WPF",
+      "ASP.NET Core",
+      "SQLite",
+      "Flutter",
+      "REST APIs",
+      "JWT",
+      "Paymob / Stripe",
+      "ESC/POS",
+    ],
+    liveDemo: null,
+    githubLink: null,
+    visibility: "private",
+    company: "CYPRA",
+    clientName: "CYPRA Product",
+    showcaseUrl: null,
+    featured: true,
+  },
+  {
+    id: "cypra-site",
+    name: "CYPRA — Software House Site",
+    description:
+      "Company website for CYPRA Software Solutions — forward-looking brand presence with React, Tailwind, and GSAP motion.",
+    techStack: ["React", "Tailwind CSS", "GSAP", "JavaScript", "Vercel"],
+    liveDemo: "https://cypra.vercel.app",
+    githubLink: "https://github.com/Mo7amedThabet/Cypra",
+    visibility: "private",
+    company: "CYPRA",
+    clientName: "CYPRA",
+    showcaseUrl: "https://cypra.vercel.app",
+    featured: true,
+  },
+  {
+    id: "taskeen",
+    name: "The Russian Whale — Taskeen",
+    description:
+      "Housing / residence management platform — units & applicants, workflow approvals, admin dashboards, and real-time updates. ASP.NET Core Web API + Entity Framework with a React/TypeScript admin UI (SignalR, Docker-ready).",
     techStack: [
       "ASP.NET Core",
       "ASP.NET Web API",
@@ -110,17 +182,18 @@ export const privateProjectsMock: Project[] = [
       "C#",
       "SQL Server",
       "React",
-      "Redux",
+      "TypeScript",
+      "SignalR",
       "JWT",
-      "REST APIs",
+      "Docker",
       "Swagger",
     ],
-    liveDemo: null,
-    githubLink: null,
+    liveDemo: "https://the-russian-whale.vercel.app",
+    githubLink: "https://github.com/Mo7amedThabet/TheRussianWhale",
     visibility: "private",
-    company: "Real Estate / Housing Sector",
-    clientName: "Taskeen Project",
-    showcaseUrl: null,
+    company: "The Russian Whale",
+    clientName: "Taskeen",
+    showcaseUrl: "https://the-russian-whale.vercel.app",
     featured: true,
   },
   {
@@ -166,27 +239,6 @@ export const privateProjectsMock: Project[] = [
     clientName: "Private Client",
     showcaseUrl: null,
     featured: true,
-  },
-  {
-    id: "private-portal",
-    name: "Corporate Employee Portal",
-    description:
-      "Internal HR portal — leave requests, announcements, document uploads, and manager approvals.",
-    techStack: [
-      "React",
-      "ASP.NET Core",
-      "C#",
-      "Entity Framework",
-      "SQL Server",
-      "JWT",
-      "REST APIs",
-    ],
-    liveDemo: null,
-    githubLink: "https://github.com/Mo7amedThabet",
-    visibility: "private",
-    company: "Corporate / HR",
-    clientName: "Company Project",
-    showcaseUrl: null,
   },
 ];
 
